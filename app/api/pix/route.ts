@@ -26,7 +26,7 @@ export async function POST(req: Request) {
         },
 
         payer: {
-          email: "teste@teste.com",
+          email: `${Date.now()}@futebolacs.com`,
 
           first_name: body.nome,
         },
