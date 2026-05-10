@@ -14,12 +14,25 @@ export default function AdminPage() {
 
   const [valor, setValor] = useState("5");
 
+  const [novaSenha, setNovaSenha] =
+    useState("");
+
   useEffect(() => {
     const tituloSalvo =
       localStorage.getItem("tituloLista");
 
     const valorSalvo =
       localStorage.getItem("valorLista");
+
+    const senhaSalva =
+      localStorage.getItem("senhaAdmin");
+
+    if (!senhaSalva) {
+      localStorage.setItem(
+        "senhaAdmin",
+        "Bandeira193"
+      );
+    }
 
     if (tituloSalvo) {
       setTitulo(tituloSalvo);
@@ -31,7 +44,10 @@ export default function AdminPage() {
   }, []);
 
   function entrar() {
-    if (senha === "Bandeira193") {
+    const senhaAtual =
+      localStorage.getItem("senhaAdmin");
+
+    if (senha === senhaAtual) {
       setLogado(true);
     } else {
       alert("Senha incorreta");
@@ -50,6 +66,22 @@ export default function AdminPage() {
     );
 
     alert("Configurações salvas");
+  }
+
+  function alterarSenha() {
+    if (novaSenha.trim() === "") {
+      alert("Digite uma nova senha");
+      return;
+    }
+
+    localStorage.setItem(
+      "senhaAdmin",
+      novaSenha
+    );
+
+    setNovaSenha("");
+
+    alert("Senha alterada com sucesso");
   }
 
   async function resetarLista() {
@@ -148,6 +180,29 @@ export default function AdminPage() {
           className="bg-blue-600 text-white px-4 py-2 rounded-lg"
         >
           Salvar Configurações
+        </button>
+      </div>
+
+      <div className="bg-white p-6 rounded-2xl shadow mb-6">
+        <h2 className="text-2xl font-bold mb-4">
+          Alterar Senha do Desenvolvedor
+        </h2>
+
+        <input
+          type="password"
+          placeholder="Nova senha"
+          value={novaSenha}
+          onChange={(e) =>
+            setNovaSenha(e.target.value)
+          }
+          className="w-full border p-3 rounded-lg mb-4"
+        />
+
+        <button
+          onClick={alterarSenha}
+          className="bg-yellow-600 text-white px-4 py-2 rounded-lg"
+        >
+          Alterar Senha
         </button>
       </div>
 
