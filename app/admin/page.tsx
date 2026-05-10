@@ -59,23 +59,22 @@ export default function AdminPage() {
 
     if (!confirmar) return;
 
-    const { data: jogadores } = await supabase
+    const { error } = await supabase
       .from("jogadores")
-      .select("id");
+      .delete()
+      .gte("id", 1);
 
-    if (!jogadores) {
-      alert("Erro ao carregar jogadores");
+    if (error) {
+      console.log(error);
+
+      alert("Erro ao resetar lista");
+
       return;
     }
 
-    for (const jogador of jogadores) {
-      await supabase
-        .from("jogadores")
-        .delete()
-        .eq("id", jogador.id);
-    }
-
     alert("Lista resetada com sucesso");
+
+    window.location.reload();
   }
 
   if (!logado) {
