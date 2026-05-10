@@ -263,6 +263,21 @@ export default function Home() {
         Futebol de {duracao} hora(s)
       </p>
 
+      <a
+        href={`https://wa.me/?text=${encodeURIComponent(
+          `⚽ ${titulo}
+
+${jogadores.length}/${limiteJogadores} jogadores confirmados!
+
+Entre na lista:
+https://futebol-acs.vercel.app`
+        )}`}
+        target="_blank"
+        className="bg-white text-green-700 font-bold px-4 py-2 rounded-xl mt-4"
+      >
+        Compartilhar no WhatsApp
+      </a>
+
       <div className="bg-white text-black rounded-2xl p-6 mt-10 w-full max-w-md shadow-lg">
         <h2 className="text-2xl font-bold mb-4">
           Entrar na Lista
