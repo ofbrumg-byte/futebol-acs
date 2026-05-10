@@ -12,9 +12,9 @@ export default function Home() {
   const [carregando, setCarregando] = useState(false);
 
   const [jogadores, setJogadores] = useState<any[]>([]);
-  const [meusJogadores, setMeusJogadores] = useState<
-    string[]
-  >([]);
+
+  const [meusJogadores, setMeusJogadores] =
+    useState<string[]>([]);
 
   const [titulo, setTitulo] = useState(
     "FUTEBOL ACS ⚽"
@@ -30,6 +30,15 @@ export default function Home() {
 
   useEffect(() => {
     carregarJogadores();
+
+    const jogadoresSalvos =
+      localStorage.getItem("meusJogadores");
+
+    if (jogadoresSalvos) {
+      setMeusJogadores(
+        JSON.parse(jogadoresSalvos)
+      );
+    }
 
     const intervaloLista = setInterval(() => {
       carregarJogadores();
@@ -169,10 +178,17 @@ export default function Home() {
               },
             ]);
 
-          setMeusJogadores((antigos) => [
-            ...antigos,
+          const atualizados = [
+            ...meusJogadores,
             nome,
-          ]);
+          ];
+
+          setMeusJogadores(atualizados);
+
+          localStorage.setItem(
+            "meusJogadores",
+            JSON.stringify(atualizados)
+          );
 
           carregarJogadores();
 
@@ -202,10 +218,16 @@ export default function Home() {
       .delete()
       .eq("id", id);
 
-    setMeusJogadores(
+    const atualizados =
       meusJogadores.filter(
         (j) => j !== jogador
-      )
+      );
+
+    setMeusJogadores(atualizados);
+
+    localStorage.setItem(
+      "meusJogadores",
+      JSON.stringify(atualizados)
     );
 
     carregarJogadores();
