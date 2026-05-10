@@ -20,7 +20,12 @@ export default function AdminPage() {
   const [novaSenha, setNovaSenha] =
     useState("");
 
+  const [jogadores, setJogadores] =
+    useState<any[]>([]);
+
   useEffect(() => {
+    carregarJogadores();
+
     const tituloSalvo =
       localStorage.getItem("tituloLista");
 
@@ -52,6 +57,17 @@ export default function AdminPage() {
       setDuracao(duracaoSalva);
     }
   }, []);
+
+  async function carregarJogadores() {
+    const { data } = await supabase
+      .from("jogadores")
+      .select("*")
+      .order("id", { ascending: true });
+
+    if (data) {
+      setJogadores(data);
+    }
+  }
 
   function entrar() {
     const senhaAtual =
@@ -122,6 +138,18 @@ export default function AdminPage() {
     alert("Lista resetada com sucesso");
 
     window.location.reload();
+  }
+
+  function gerarRelatorio() {
+    const totalJogadores =
+      jogadores.length;
+
+    const totalArrecadado =
+      jogadores.length * Number(valor);
+
+    alert(
+      `RELATÓRIO DE ARRECADAÇÃO\n\nJogadores Confirmados: ${totalJogadores}\nValor por Jogador: R$ ${valor}\n\nTOTAL ARRECADADO: R$ ${totalArrecadado}`
+    );
   }
 
   if (!logado) {
@@ -256,12 +284,26 @@ export default function AdminPage() {
 
       <div className="bg-white p-6 rounded-2xl shadow">
         <h2 className="text-2xl font-bold mb-4">
-          Pagamentos
+          Relatório de Arrecadação
         </h2>
 
-        <p>
-          Aqui aparecerão os pagamentos aprovados.
+        <p className="mb-2 font-semibold">
+          Jogadores confirmados:{" "}
+          {jogadores.length}
         </p>
+
+        <p className="mb-4 font-semibold">
+          Valor total atual: R${" "}
+          {jogadores.length *
+            Number(valor)}
+        </p>
+
+        <button
+          onClick={gerarRelatorio}
+          className="bg-green-600 text-white px-4 py-2 rounded-lg"
+        >
+          Gerar Relatório
+        </button>
       </div>
     </main>
   );
