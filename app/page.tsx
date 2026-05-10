@@ -282,17 +282,19 @@ export default function Home() {
                 ) && (
                   <button
                     onClick={() => {
-  const confirmar = window.confirm(
-    "Tem certeza que deseja sair da lista?\n\nO valor do PIX NÃO será reembolsado."
-  );
+                      const confirmar =
+                        window.confirm(
+                          "Tem certeza que deseja sair da lista?\n\nO valor do PIX NÃO será reembolsado."
+                        );
 
-  if (confirmar) {
-    sairDaLista(jogador.id);
-  }
-}}
-                      )
-                    }
-                    className="bg-red-600 text-white px-3 py-1 rounded-lg text-sm"
+                      if (confirmar) {
+                        sairDaLista(
+                          jogador.id,
+                          jogador.nome
+                        );
+                      }
+                    }}
+                    className="bg-red-600 text-white px-3 py-1 rounded-lg"
                   >
                     Sair
                   </button>
