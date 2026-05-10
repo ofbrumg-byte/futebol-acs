@@ -145,10 +145,58 @@ export default function AdminPage() {
       jogadores.length;
 
     const totalArrecadado =
-      jogadores.length * Number(valor);
+      jogadores.reduce(
+        (total, jogador) =>
+          total +
+          Number(jogador.valor || 0),
+        0
+      );
+
+    const relatorioJogadores =
+      jogadores
+        .map((jogador, index) => {
+          const data = new Date(
+            jogador.created_at
+          );
+
+          const dataFormatada =
+            data.toLocaleDateString(
+              "pt-BR"
+            );
+
+          const horaFormatada =
+            data.toLocaleTimeString(
+              "pt-BR"
+            );
+
+          return `${index + 1}. ${
+            jogador.nome
+          }
+
+Valor: R$ ${
+            jogador.valor || "0"
+          }
+
+Pagamento:
+${dataFormatada} às ${horaFormatada}
+`;
+        })
+        .join(
+          "\n-------------------\n\n"
+        );
 
     alert(
-      `RELATÓRIO DE ARRECADAÇÃO\n\nJogadores Confirmados: ${totalJogadores}\nValor por Jogador: R$ ${valor}\n\nTOTAL ARRECADADO: R$ ${totalArrecadado}`
+      `RELATÓRIO DE ARRECADAÇÃO
+
+${relatorioJogadores}
+
+-------------------
+
+Jogadores Confirmados:
+${totalJogadores}
+
+TOTAL ARRECADADO:
+R$ ${totalArrecadado}`
     );
   }
 
@@ -303,8 +351,14 @@ export default function AdminPage() {
 
         <p className="mb-4 font-semibold">
           Valor total atual: R${" "}
-          {jogadores.length *
-            Number(valor)}
+          {jogadores.reduce(
+            (total, jogador) =>
+              total +
+              Number(
+                jogador.valor || 0
+              ),
+            0
+          )}
         </p>
 
         <button

@@ -71,6 +71,8 @@ export async function GET(req: Request) {
             {
               nome,
               pago: true,
+              valor:
+                resposta.transaction_amount?.toString(),
             },
           ]);
       }

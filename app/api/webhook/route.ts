@@ -55,6 +55,8 @@ export async function POST(req: Request) {
           {
             nome,
             pago: true,
+            valor:
+              pagamento.transaction_amount?.toString(),
           },
         ]);
     }
