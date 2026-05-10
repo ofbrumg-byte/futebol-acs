@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 
+import { supabase } from "@/lib/supabase";
+
 export default function AdminPage() {
   const [senha, setSenha] = useState("");
   const [logado, setLogado] = useState(false);
@@ -50,16 +52,27 @@ export default function AdminPage() {
     alert("Configurações salvas");
   }
 
-  function resetarLista() {
-    const confirmar = confirm(
-      "Deseja realmente resetar a lista?"
+  async function resetarLista() {
+    const confirmar = window.confirm(
+      "Deseja realmente resetar toda a lista?"
     );
 
-    if (confirmar) {
-      localStorage.removeItem("jogadores");
+    if (!confirmar) return;
 
-      alert("Lista resetada");
+    const { error } = await supabase
+      .from("jogadores")
+      .delete()
+      .neq("id", 0);
+
+    if (error) {
+      console.log(error);
+
+      alert("Erro ao resetar lista");
+
+      return;
     }
+
+    alert("Lista resetada com sucesso");
   }
 
   if (!logado) {
