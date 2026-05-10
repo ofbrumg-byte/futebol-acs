@@ -230,15 +230,21 @@ export default function Home() {
           className="w-full border p-3 rounded-lg mb-4"
         />
 
-        <button
-          onClick={gerarPix}
-          disabled={carregando}
-          className="w-full bg-green-600 text-white p-3 rounded-lg font-bold"
-        >
-          {carregando
-            ? "Gerando PIX..."
-            : "Confirmar inclusão na lista"}
-        </button>
+        {jogadores.length >= 22 ? (
+          <div className="w-full bg-red-600 text-white p-3 rounded-lg font-bold text-center">
+            LISTA ENCERRADA ⚠️
+          </div>
+        ) : (
+          <button
+            onClick={gerarPix}
+            disabled={carregando}
+            className="w-full bg-green-600 text-white p-3 rounded-lg font-bold"
+          >
+            {carregando
+              ? "Gerando PIX..."
+              : "Confirmar inclusão na lista"}
+          </button>
+        )}
 
         {pix && (
           <div className="mt-6">
