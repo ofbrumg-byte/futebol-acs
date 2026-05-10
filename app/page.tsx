@@ -22,6 +22,12 @@ export default function Home() {
 
   const [valor, setValor] = useState("5");
 
+  const [duracao, setDuracao] =
+    useState("2");
+
+  const limiteJogadores =
+    duracao === "1" ? 15 : 22;
+
   useEffect(() => {
     carregarJogadores();
 
@@ -35,12 +41,19 @@ export default function Home() {
     const valorSalvo =
       localStorage.getItem("valorLista");
 
+    const duracaoSalva =
+      localStorage.getItem("duracaoFutebol");
+
     if (tituloSalvo) {
       setTitulo(tituloSalvo);
     }
 
     if (valorSalvo) {
       setValor(valorSalvo);
+    }
+
+    if (duracaoSalva) {
+      setDuracao(duracaoSalva);
     }
 
     const canal = supabase
@@ -96,7 +109,10 @@ export default function Home() {
       return;
     }
 
-    if (jogadores.length >= 22) {
+    if (
+      jogadores.length >=
+      limiteJogadores
+    ) {
       alert("Lista cheia");
       return;
     }
@@ -107,7 +123,8 @@ export default function Home() {
       const resposta = await fetch("/api/pix", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type":
+            "application/json",
         },
         body: JSON.stringify({
           nome,
@@ -186,7 +203,9 @@ export default function Home() {
       .eq("id", id);
 
     setMeusJogadores(
-      meusJogadores.filter((j) => j !== jogador)
+      meusJogadores.filter(
+        (j) => j !== jogador
+      )
     );
 
     carregarJogadores();
@@ -207,6 +226,10 @@ export default function Home() {
         {titulo}
       </h1>
 
+      <p className="mt-2 font-semibold">
+        Futebol de {duracao} hora(s)
+      </p>
+
       <div className="bg-white text-black rounded-2xl p-6 mt-10 w-full max-w-md shadow-lg">
         <h2 className="text-2xl font-bold mb-4">
           Entrar na Lista
@@ -217,7 +240,8 @@ export default function Home() {
         </p>
 
         <p className="mb-4 font-semibold">
-          {jogadores.length} / 22 jogadores
+          {jogadores.length} /{" "}
+          {limiteJogadores} jogadores
         </p>
 
         <input
@@ -230,7 +254,8 @@ export default function Home() {
           className="w-full border p-3 rounded-lg mb-4"
         />
 
-        {jogadores.length >= 22 ? (
+        {jogadores.length >=
+        limiteJogadores ? (
           <div className="w-full bg-red-600 text-white p-3 rounded-lg font-bold text-center">
             LISTA ENCERRADA ⚠️
           </div>
@@ -271,42 +296,48 @@ export default function Home() {
         </h2>
 
         {jogadores.length === 0 ? (
-          <p>Nenhum jogador confirmado ainda.</p>
+          <p>
+            Nenhum jogador confirmado
+            ainda.
+          </p>
         ) : (
           <ol className="space-y-3">
-            {jogadores.map((jogador, index) => (
-              <li
-                key={jogador.id}
-                className="flex items-center justify-between border-b pb-2"
-              >
-                <span>
-                  {index + 1}. {jogador.nome}
-                </span>
+            {jogadores.map(
+              (jogador, index) => (
+                <li
+                  key={jogador.id}
+                  className="flex items-center justify-between border-b pb-2"
+                >
+                  <span>
+                    {index + 1}.{" "}
+                    {jogador.nome}
+                  </span>
 
-                {meusJogadores.includes(
-                  jogador.nome
-                ) && (
-                  <button
-                    onClick={() => {
-                      const confirmar =
-                        window.confirm(
-                          "Tem certeza que deseja sair da lista?\n\nO valor do PIX NÃO será reembolsado."
-                        );
+                  {meusJogadores.includes(
+                    jogador.nome
+                  ) && (
+                    <button
+                      onClick={() => {
+                        const confirmar =
+                          window.confirm(
+                            "Tem certeza que deseja sair da lista?\n\nO valor do PIX NÃO será reembolsado."
+                          );
 
-                      if (confirmar) {
-                        sairDaLista(
-                          jogador.id,
-                          jogador.nome
-                        );
-                      }
-                    }}
-                    className="bg-red-600 text-white px-3 py-1 rounded-lg"
-                  >
-                    Sair
-                  </button>
-                )}
-              </li>
-            ))}
+                        if (confirmar) {
+                          sairDaLista(
+                            jogador.id,
+                            jogador.nome
+                          );
+                        }
+                      }}
+                      className="bg-red-600 text-white px-3 py-1 rounded-lg"
+                    >
+                      Sair
+                    </button>
+                  )}
+                </li>
+              )
+            )}
           </ol>
         )}
       </div>

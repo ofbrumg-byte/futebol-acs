@@ -14,6 +14,9 @@ export default function AdminPage() {
 
   const [valor, setValor] = useState("5");
 
+  const [duracao, setDuracao] =
+    useState("2");
+
   const [novaSenha, setNovaSenha] =
     useState("");
 
@@ -26,6 +29,9 @@ export default function AdminPage() {
 
     const senhaSalva =
       localStorage.getItem("senhaAdmin");
+
+    const duracaoSalva =
+      localStorage.getItem("duracaoFutebol");
 
     if (!senhaSalva) {
       localStorage.setItem(
@@ -40,6 +46,10 @@ export default function AdminPage() {
 
     if (valorSalvo) {
       setValor(valorSalvo);
+    }
+
+    if (duracaoSalva) {
+      setDuracao(duracaoSalva);
     }
   }, []);
 
@@ -63,6 +73,11 @@ export default function AdminPage() {
     localStorage.setItem(
       "valorLista",
       valor
+    );
+
+    localStorage.setItem(
+      "duracaoFutebol",
+      duracao
     );
 
     alert("Configurações salvas");
@@ -174,6 +189,26 @@ export default function AdminPage() {
           }
           className="w-full border p-3 rounded-lg mb-4"
         />
+
+        <label className="block mb-2 font-semibold">
+          Duração do Futebol
+        </label>
+
+        <select
+          value={duracao}
+          onChange={(e) =>
+            setDuracao(e.target.value)
+          }
+          className="w-full border p-3 rounded-lg mb-4"
+        >
+          <option value="1">
+            1 Hora
+          </option>
+
+          <option value="2">
+            2 Horas
+          </option>
+        </select>
 
         <button
           onClick={salvarConfiguracoes}
