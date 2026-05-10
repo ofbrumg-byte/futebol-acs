@@ -318,6 +318,21 @@ export default function Home() {
             <div className="bg-gray-100 p-3 rounded-lg mt-4 break-all text-sm text-black">
               {pix}
             </div>
+
+            <button
+              onClick={() => {
+                navigator.clipboard.writeText(
+                  pix
+                );
+
+                alert(
+                  "Código PIX copiado!"
+                );
+              }}
+              className="w-full bg-blue-600 text-white p-3 rounded-lg font-bold mt-4"
+            >
+              Copiar Código PIX
+            </button>
           </div>
         )}
       </div>
