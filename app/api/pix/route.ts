@@ -13,11 +13,17 @@ export async function POST(req: Request) {
 
     const resposta = await payment.create({
       body: {
-        transaction_amount: Number(body.valor),
+        transaction_amount: Number(
+          body.valor
+        ),
 
         description: "Futebol ACS",
 
         payment_method_id: "pix",
+
+        metadata: {
+          nome: body.nome,
+        },
 
         payer: {
           email: "teste@teste.com",

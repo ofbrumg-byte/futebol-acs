@@ -163,36 +163,36 @@ export default function Home() {
     const intervalo = setInterval(async () => {
       try {
         const resposta = await fetch(
-          `/api/verificar?id=${paymentId}`
+          `/api/verificar?id=${paymentId}&nome=${nome}&duracao=${duracao}`
         );
 
-        const dados = await resposta.json();
+        const dados =
+          await resposta.json();
 
-        if (dados.status === "approved") {
-          await supabase
-            .from("jogadores")
-            .insert([
-              {
-                nome,
-                pago: true,
-              },
-            ]);
-
+        if (
+          dados.status === "approved"
+        ) {
           const atualizados = [
             ...meusJogadores,
             nome,
           ];
 
-          setMeusJogadores(atualizados);
+          setMeusJogadores(
+            atualizados
+          );
 
           localStorage.setItem(
             "meusJogadores",
-            JSON.stringify(atualizados)
+            JSON.stringify(
+              atualizados
+            )
           );
 
           carregarJogadores();
 
-          alert("Pagamento aprovado!");
+          alert(
+            "Pagamento aprovado!"
+          );
 
           setPix("");
           setQrCode("");
@@ -201,12 +201,23 @@ export default function Home() {
 
           clearInterval(intervalo);
         }
+
+        if (
+          dados.status === "lotado"
+        ) {
+          alert(
+            "A lista lotou antes da confirmação do seu pagamento."
+          );
+
+          clearInterval(intervalo);
+        }
       } catch (erro) {
         console.log(erro);
       }
     }, 5000);
 
-    return () => clearInterval(intervalo);
+    return () =>
+      clearInterval(intervalo);
   }, [paymentId, nome]);
 
   async function sairDaLista(
