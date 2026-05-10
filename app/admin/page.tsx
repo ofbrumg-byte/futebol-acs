@@ -183,6 +183,15 @@ export default function AdminPage() {
 
   return (
     <main className="min-h-screen bg-gray-100 p-6">
+      <div className="w-full flex justify-end mb-6">
+        <a
+          href="/"
+          className="bg-black text-white px-4 py-2 rounded-lg"
+        >
+          Voltar para Página Principal
+        </a>
+      </div>
+
       <h1 className="text-4xl font-bold mb-8">
         Painel Admin
       </h1>
