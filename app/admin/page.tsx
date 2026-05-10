@@ -59,17 +59,20 @@ export default function AdminPage() {
 
     if (!confirmar) return;
 
-    const { error } = await supabase
+    const { data: jogadores } = await supabase
       .from("jogadores")
-      .delete()
-      .neq("id", 0);
+      .select("id");
 
-    if (error) {
-      console.log(error);
-
-      alert("Erro ao resetar lista");
-
+    if (!jogadores) {
+      alert("Erro ao carregar jogadores");
       return;
+    }
+
+    for (const jogador of jogadores) {
+      await supabase
+        .from("jogadores")
+        .delete()
+        .eq("id", jogador.id);
     }
 
     alert("Lista resetada com sucesso");
