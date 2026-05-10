@@ -9,9 +9,11 @@ export default function Home() {
   const [pix, setPix] = useState("");
   const [qrCode, setQrCode] = useState("");
   const [paymentId, setPaymentId] = useState("");
-  const [carregando, setCarregando] = useState(false);
+  const [carregando, setCarregando] =
+    useState(false);
 
-  const [jogadores, setJogadores] = useState<any[]>([]);
+  const [jogadores, setJogadores] =
+    useState<any[]>([]);
 
   const [meusJogadores, setMeusJogadores] =
     useState<string[]>([]);
@@ -31,6 +33,8 @@ export default function Home() {
   useEffect(() => {
     carregarJogadores();
 
+    carregarConfiguracoes();
+
     const jogadoresSalvos =
       localStorage.getItem("meusJogadores");
 
@@ -43,27 +47,6 @@ export default function Home() {
     const intervaloLista = setInterval(() => {
       carregarJogadores();
     }, 2000);
-
-    const tituloSalvo =
-      localStorage.getItem("tituloLista");
-
-    const valorSalvo =
-      localStorage.getItem("valorLista");
-
-    const duracaoSalva =
-      localStorage.getItem("duracaoFutebol");
-
-    if (tituloSalvo) {
-      setTitulo(tituloSalvo);
-    }
-
-    if (valorSalvo) {
-      setValor(valorSalvo);
-    }
-
-    if (duracaoSalva) {
-      setDuracao(duracaoSalva);
-    }
 
     const canal = supabase
       .channel("jogadores-tempo-real")
@@ -89,6 +72,22 @@ export default function Home() {
       supabase.removeChannel(canal);
     };
   }, []);
+
+  async function carregarConfiguracoes() {
+    const { data } = await supabase
+      .from("configuracoes")
+      .select("*")
+      .eq("id", 1)
+      .single();
+
+    if (data) {
+      setTitulo(data.titulo);
+
+      setValor(data.valor);
+
+      setDuracao(data.duracao);
+    }
+  }
 
   async function carregarJogadores() {
     const { data } = await supabase

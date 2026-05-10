@@ -8,11 +8,11 @@ export default function AdminPage() {
   const [senha, setSenha] = useState("");
   const [logado, setLogado] = useState(false);
 
-  const [titulo, setTitulo] = useState(
-    "FUTEBOL ACS ⚽"
-  );
+  const [titulo, setTitulo] =
+    useState("FUTEBOL ACS ⚽");
 
-  const [valor, setValor] = useState("5");
+  const [valor, setValor] =
+    useState("5");
 
   const [duracao, setDuracao] =
     useState("2");
@@ -20,43 +20,35 @@ export default function AdminPage() {
   const [novaSenha, setNovaSenha] =
     useState("");
 
+  const [senhaBanco, setSenhaBanco] =
+    useState("");
+
   const [jogadores, setJogadores] =
     useState<any[]>([]);
 
   useEffect(() => {
+    carregarConfiguracoes();
+
     carregarJogadores();
-
-    const tituloSalvo =
-      localStorage.getItem("tituloLista");
-
-    const valorSalvo =
-      localStorage.getItem("valorLista");
-
-    const senhaSalva =
-      localStorage.getItem("senhaAdmin");
-
-    const duracaoSalva =
-      localStorage.getItem("duracaoFutebol");
-
-    if (!senhaSalva) {
-      localStorage.setItem(
-        "senhaAdmin",
-        "Bandeira193"
-      );
-    }
-
-    if (tituloSalvo) {
-      setTitulo(tituloSalvo);
-    }
-
-    if (valorSalvo) {
-      setValor(valorSalvo);
-    }
-
-    if (duracaoSalva) {
-      setDuracao(duracaoSalva);
-    }
   }, []);
+
+  async function carregarConfiguracoes() {
+    const { data } = await supabase
+      .from("configuracoes")
+      .select("*")
+      .eq("id", 1)
+      .single();
+
+    if (data) {
+      setTitulo(data.titulo);
+
+      setValor(data.valor);
+
+      setDuracao(data.duracao);
+
+      setSenhaBanco(data.senha_admin);
+    }
+  }
 
   async function carregarJogadores() {
     const { data } = await supabase
@@ -70,45 +62,53 @@ export default function AdminPage() {
   }
 
   function entrar() {
-    const senhaAtual =
-      localStorage.getItem("senhaAdmin");
-
-    if (senha === senhaAtual) {
+    if (senha === senhaBanco) {
       setLogado(true);
     } else {
       alert("Senha incorreta");
     }
   }
 
-  function salvarConfiguracoes() {
-    localStorage.setItem(
-      "tituloLista",
-      titulo
-    );
+  async function salvarConfiguracoes() {
+    const { error } = await supabase
+      .from("configuracoes")
+      .update({
+        titulo,
+        valor,
+        duracao,
+      })
+      .eq("id", 1);
 
-    localStorage.setItem(
-      "valorLista",
-      valor
-    );
+    if (error) {
+      alert("Erro ao salvar");
 
-    localStorage.setItem(
-      "duracaoFutebol",
-      duracao
-    );
+      return;
+    }
 
     alert("Configurações salvas");
   }
 
-  function alterarSenha() {
+  async function alterarSenha() {
     if (novaSenha.trim() === "") {
       alert("Digite uma nova senha");
+
       return;
     }
 
-    localStorage.setItem(
-      "senhaAdmin",
-      novaSenha
-    );
+    const { error } = await supabase
+      .from("configuracoes")
+      .update({
+        senha_admin: novaSenha,
+      })
+      .eq("id", 1);
+
+    if (error) {
+      alert("Erro ao alterar senha");
+
+      return;
+    }
+
+    setSenhaBanco(novaSenha);
 
     setNovaSenha("");
 
